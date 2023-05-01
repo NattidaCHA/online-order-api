@@ -9,10 +9,10 @@ const db = mongoist(Conf.db.candidate, {
 const dataCollection = db.collection('data_order')
 
 // create new db
-const newDBOrderCollection = db.collection('order_list')
+//const newDBOrderCollection = db.collection('order_list')
 
 // create Product list
-const _insert_produetCollection = db.collection('test_product')
+//const _insert_produetCollection = db.collection('test_product')
 
 // Data for Get api
 const productCollection = db.collection('products')
@@ -24,6 +24,10 @@ const modelUser = {
     // api 
     getDataOrder: async () => {
         let doc = await dataCollection.find({})
+        return doc
+    },
+    getTotalProduct: async () => {
+        let doc = await productCollection.find({})
         return doc
     },
     getProductlist: async (pageInfo) => {
@@ -101,7 +105,7 @@ const modelUser = {
 
     // Clean and New DB order
     insertOrderList: async (data) => {
-        let doc = await newDBOrderCollection.insert(data)
+        let doc = await orderCollection.insert(data)
         return doc
     },
     // for Test Transform Product 
@@ -129,7 +133,7 @@ const modelUser = {
     },
 
     insertProduct: async (data) => {
-        let doc = await _insert_produetCollection.insert(data)
+        let doc = await productCollection.insert(data)
         return doc
     }
 
