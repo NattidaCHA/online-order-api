@@ -154,6 +154,14 @@ const modelUser = {
         })
         return doc
     },
+    getTotalCartSucces: async () => {
+        let doc = await cartCollection.findOne({
+            status: {
+                $in: ['confirm']
+            }
+        })
+        return doc
+    },
     getCartById: async (id) => {
         let doc = await cartCollection.findOne({_id: mongoist.ObjectID(id)})
         return doc
@@ -165,14 +173,6 @@ const modelUser = {
                     status: 'confirm'
                 }
             },
-            // {
-            //     $project: {
-            //         _id: 1,
-            //         status:1
-            //         cart:1
-
-            //     }
-            // },
             {
                 $sort: {
                     create_date: -1
