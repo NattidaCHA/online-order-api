@@ -155,10 +155,8 @@ const modelUser = {
         return doc
     },
     getTotalCartSucces: async () => {
-        let doc = await cartCollection.findOne({
-            status: {
-                $in: ['confirm']
-            }
+        let doc = await cartCollection.find({
+            status: 'confirm'
         })
         return doc
     },

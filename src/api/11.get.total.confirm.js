@@ -18,7 +18,7 @@ async function Blogic(req, res, next) {
     try {
 
         let products = await saleOrderModel.getTotalCartSucces()
-        let total = products.cart.length ? products.cart.length : '0'
+        let total = products.length ? products.length : 0
         res.body = {
             total: total
         }
