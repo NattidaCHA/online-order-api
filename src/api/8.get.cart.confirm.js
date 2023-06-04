@@ -1,7 +1,7 @@
 /**
- * [1] Get Product
- * @route GET /product
- * @group sales_order
+ * [1] Get Cart
+ * @route GET /cart/history
+ * @group cart_shopping
  * @param {number} pageno.query: page nummber default ให้เป็น 1 -eg: 1,2,3
  * @param {number} pagesize.query: page size default ให้เป็น 10 -eg: 10,20,30
  * @returns {object} 200 - An object
@@ -21,16 +21,14 @@ async function Blogic(req, res, next) {
 
     let pageInfo = {
       page: parseInt(req.query.pageno) || 1,
-      size: parseInt(req.query.pagesize) || 20
+      size: parseInt(req.query.pagesize) || 10
     }
     /* process */
-    let products = await saleOrderModel.getProductlist(pageInfo)
-    if (products.length > 0) {
-      products.forEach(o => o.totalPc = addComma(o.totalPc))
-      res.body = Conf.utils.outputBuilder(products, products.length, pageInfo)
+    let carts = await saleOrderModel.getCartSuccess(pageInfo)
+    if (carts.length > 0) {
+      res.body = Conf.utils.outputBuilder(carts, carts.length, pageInfo)
     } else {
-     
-      throw new Error(`Product not found`)
+      throw new Error(`Cart not found`)
     }
     next()
   } catch (e) {

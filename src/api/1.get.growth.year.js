@@ -1,5 +1,5 @@
 /**
- * [1] List Candidate
+ * [1] growth_year
  * @route GET /growth_year
  * @group sales_order
  * @returns {object} 200 - An array list of updated status of selected candidate
@@ -17,9 +17,10 @@ async function Blogic(req, res, next) {
   try {
 
     /* process */
+
+    //Get Year
     let year = await saleOrder.queryYear()
     if (year) {
-
       let growth = await saleOrder.queryProductGrowth(year)
       let data = []
       if (growth.length > 0) {

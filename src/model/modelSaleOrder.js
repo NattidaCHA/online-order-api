@@ -9,16 +9,17 @@ const db = mongoist(Conf.db.candidate, {
 const dataCollection = db.collection('data_order')
 
 // create new db
-//const newDBOrderCollection = db.collection('order_list')
+const newDBOrderCollection = db.collection('order_list')
 
 // create Product list
-//const _insert_produetCollection = db.collection('test_product')
+const _insert_produetCollection = db.collection('test_product')
 
 // Data for Get api
 const productCollection = db.collection('products')
 const orderCollection = db.collection('_order_all')
 
-
+//Cart
+const cartCollection = db.collection('cart')
 
 const modelUser = {
     // api 
@@ -28,6 +29,12 @@ const modelUser = {
     },
     getTotalProduct: async () => {
         let doc = await productCollection.find({})
+        return doc
+    },
+    getProductById: async (id) => {
+        let doc = await productCollection.findOne({
+            _id: id
+        })
         return doc
     },
     getProductlist: async (pageInfo) => {
@@ -105,7 +112,7 @@ const modelUser = {
 
     // Clean and New DB order
     insertOrderList: async (data) => {
-        let doc = await orderCollection.insert(data)
+        let doc = await newDBOrderCollection.insert(data)
         return doc
     },
     // for Test Transform Product 
@@ -131,12 +138,69 @@ const modelUser = {
 
         return product
     },
-
     insertProduct: async (data) => {
-        let doc = await productCollection.insert(data)
+        let doc = await _insert_produetCollection.insert(data)
         return doc
-    }
+    },
+    insertCart: async (data) => {
+        let doc = await cartCollection.insert(data)
+        return doc
+    },
+    getCart: async (data) => {
+        let doc = await cartCollection.findOne({
+            status: {
+                $in: ['create', 'pending']
+            }
+        })
+        return doc
+    },
+    getCartById: async (id) => {
+        let doc = await cartCollection.findOne({_id: mongoist.ObjectID(id)})
+        return doc
+    },
+    getCartSuccess: async (pageInfo) => {
+        const pageStart = (pageInfo.page - 1) * pageInfo.size
+        let doc = await cartCollection.aggregate([{
+                $match: {
+                    status: 'confirm'
+                }
+            },
+            // {
+            //     $project: {
+            //         _id: 1,
+            //         status:1
+            //         cart:1
 
+            //     }
+            // },
+            {
+                $sort: {
+                    create_date: -1
+                }
+            },
+            {
+                $skip: pageStart
+            },
+            {
+                $limit: pageInfo.size
+            }
+        ])
+        return doc
+    },
+    updateCart: async (data) => {
+        let doc = await cartCollection.update({
+            _id: mongoist.ObjectID(data._id)
+        }, {
+            $set: {
+                status: data.status,
+                cart: data.cart,
+                update_date: data.update_date
+            },
+        }, {
+            multi: true
+        })
+        return doc
+    },
 }
 
 module.exports = modelUser

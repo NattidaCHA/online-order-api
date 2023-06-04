@@ -1,5 +1,5 @@
 /**
- * [1] List Candidate
+ * [1] actual_target
  * @route GET /actual_target
  * @group sales_order
  * @returns {object} 200 - An array list of updated status of selected candidate
